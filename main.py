@@ -53,21 +53,22 @@ def list_models():
 
 def main():
     parser = argparse.ArgumentParser(description='Interact with the Gemini API')
-    parser.add_argument('command', choices=['chat', 'list-models-ids'], help='The command to execute')
-    parser.add_argument('-m', '--model', required=False, help='Model name (required for chat)')
-    parser.add_argument('prompt', nargs=argparse.REMAINDER, help='The prompt to send')
+    subparsers = parser.add_subparsers(dest='command', required=True)
+
+    # Chat command
+    chat_parser = subparsers.add_parser('chat', help='Send a prompt to a model')
+    chat_parser.add_argument('-m', '--model', required=True, help='Model name')
+    chat_parser.add_argument('prompt', help='The prompt to send')
+
+    # List models command
+    list_parser = subparsers.add_parser('list-models-ids', help='List available model IDs')
+
     args = parser.parse_args()
 
     if args.command == 'chat':
-        if not args.model:
-            print("Error: --model is required for the chat command.")
-            return 1
-        prompt = ' '.join(args.prompt)
-        chat(args.model, prompt)
+        chat(args.model, args.prompt)
     elif args.command == 'list-models-ids':
         list_models()
-
-    return 0
 
 if __name__ == '__main__':
     sys.exit(main())
