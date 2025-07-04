@@ -8,13 +8,15 @@ def chat(model_name, prompt):
         print("Error: GEMINI_API_KEY environment variable is not set.")
         return
 
-    url = f"https://api.gemini.com/v1/models/{model_name}/chat"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
     data = {
-        "prompt": prompt
+        "contents": [{
+            "parts": [{"text": prompt}]
+        }]
     }
 
     response = requests.post(url, json=data, headers=headers)
