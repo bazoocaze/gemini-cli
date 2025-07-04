@@ -22,7 +22,9 @@ def chat(model_name, prompt):
     response = requests.post(url, json=data, headers=headers)
 
     if response.status_code == 200:
-        print(response.json())
+        response_json = response.json()
+        content = response_json.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+        print(content)
     else:
         print(f"Error: {response.status_code} - {response.text}")
 
