@@ -10,7 +10,7 @@ def chat(model_name, prompt):
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
     headers = {
-        "Authorization": f"Bearer {api_key}",
+        "X-Goog-Api-Key": api_key,
         "Content-Type": "application/json"
     }
     data = {
