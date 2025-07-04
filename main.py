@@ -25,7 +25,7 @@ def chat(model_name, prompt):
         print(f"Error: {response.status_code} - {response.text}")
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4 or sys.argv[1] != 'chat' or sys.argv[2] != '-m':
+    if len(sys.argv) != 5 or sys.argv[1] != 'chat' or sys.argv[2] != '-m':
         print("Usage: python main.py chat -m nome_do_modelo prompt")
     else:
         model_name = sys.argv[3]
