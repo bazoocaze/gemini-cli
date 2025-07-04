@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 import requests
 
 def chat(model_name, prompt):
@@ -28,10 +29,16 @@ def chat(model_name, prompt):
     else:
         print(f"Error: {response.status_code} - {response.text}")
 
+def main():
+    parser = argparse.ArgumentParser(description='Interact with the Gemini API')
+    parser.add_argument('command', choices=['chat'], help='The command to execute')
+    parser.add_argument('-m', '--model', required=True, help='Model name')
+    parser.add_argument('prompt', nargs=argparse.REMAINDER, help='The prompt to send')
+    args = parser.parse_args()
+
+    if args.command == 'chat':
+        prompt = ' '.join(args.prompt)
+        chat(args.model, prompt)
+
 if __name__ == '__main__':
-    if len(sys.argv) != 5 or sys.argv[1] != 'chat' or sys.argv[2] != '-m':
-        print("Usage: python main.py chat -m nome_do_modelo prompt")
-    else:
-        model_name = sys.argv[3]
-        prompt = ' '.join(sys.argv[4:])
-        chat(model_name, prompt)
+    main()
