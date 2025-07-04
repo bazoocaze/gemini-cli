@@ -61,11 +61,13 @@ def main():
     if args.command == 'chat':
         if not args.model:
             print("Error: --model is required for the chat command.")
-            return
+            return 1
         prompt = ' '.join(args.prompt)
         chat(args.model, prompt)
     elif args.command == 'list-models-ids':
         list_models()
 
+    return 0
+
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
