@@ -37,11 +37,10 @@ def chat(model_name, prompt=None):
         response_json = response.json()
         content = response_json.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
         print(content)
-        with open('history.jsonl', 'a') as f:
-            json.dump({'prompt': prompt, 'response': content}, f)
-            f.write('\n')
+        return {'prompt': prompt, 'response': content}
     else:
         print(f"Error: {response.status_code} - {response.text}")
+        return None
 
 def list_models():
     headers = get_headers()
@@ -76,7 +75,11 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'chat':
-        chat(args.model, args.prompt)
+        result = chat(args.model, args.prompt)
+        if result and args.save:
+            with open('history.jsonl', 'a') as f:
+                json.dump(result, f)
+                f.write('\n')
     elif args.command == 'list-models-ids':
         list_models()
 
