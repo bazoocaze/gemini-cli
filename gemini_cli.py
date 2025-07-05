@@ -57,7 +57,7 @@ def main():
 
     # Chat command
     chat_parser = subparsers.add_parser('chat', help='Send a prompt to a model')
-    chat_parser.add_argument('-m', '--model', required=True, help='Model name')
+    chat_parser.add_argument('-m', '--model', default='gemini-2.5-flash', help='Model name (default: gemini-2.5-flash)')
     chat_parser.add_argument('prompt', help='The prompt to send')
 
     # List models command
