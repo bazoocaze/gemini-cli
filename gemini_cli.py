@@ -16,7 +16,10 @@ def get_headers():
     }
     return headers
 
-def chat(model_name, prompt, save=False):
+def chat(model_name, prompt=None):
+    if prompt is None:
+        prompt = sys.stdin.read().strip()
+
     headers = get_headers()
     if not headers:
         return
@@ -34,10 +37,9 @@ def chat(model_name, prompt, save=False):
         response_json = response.json()
         content = response_json.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
         print(content)
-        if save:
-            with open('history.jsonl', 'a') as f:
-                json.dump({'prompt': prompt, 'response': content}, f)
-                f.write('\n')
+        with open('history.jsonl', 'a') as f:
+            json.dump({'prompt': prompt, 'response': content}, f)
+            f.write('\n')
     else:
         print(f"Error: {response.status_code} - {response.text}")
 
@@ -66,7 +68,7 @@ def main():
     chat_parser = subparsers.add_parser('chat', help='Send a prompt to a model')
     chat_parser.add_argument('-m', '--model', default='gemini-2.5-flash', help='Model name (default: gemini-2.5-flash)')
     chat_parser.add_argument('--save', action='store_true', help='Save the chat result to history.jsonl')
-    chat_parser.add_argument('prompt', help='The prompt to send')
+    chat_parser.add_argument('prompt', nargs='?', help='The prompt to send')
 
     # List models command
     list_parser = subparsers.add_parser('list-models-ids', help='List available model IDs')
@@ -74,7 +76,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'chat':
-        chat(args.model, args.prompt, save=args.save)
+        chat(args.model, args.prompt)
     elif args.command == 'list-models-ids':
         list_models()
 
