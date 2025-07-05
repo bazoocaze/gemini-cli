@@ -22,7 +22,7 @@ def chat(model_name, prompt=None):
 
     headers = get_headers()
     if not headers:
-        return
+        return 1
 
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
     data = {
@@ -40,12 +40,12 @@ def chat(model_name, prompt=None):
         return {'prompt': prompt, 'response': content}
     else:
         print(f"Error: {response.status_code} - {response.text}")
-        return None
+        return 1
 
 def list_models():
     headers = get_headers()
     if not headers:
-        return
+        return 1
 
     url = "https://generativelanguage.googleapis.com/v1beta/models"
 
@@ -58,6 +58,7 @@ def list_models():
             print(model.get('name', '').replace('models/', ''))
     else:
         print(f"Error: {response.status_code} - {response.text}")
+        return 1
 
 def main():
     parser = argparse.ArgumentParser(description='Interact with the Gemini API')
@@ -76,12 +77,13 @@ def main():
 
     if args.command == 'chat':
         result = chat(args.model, args.prompt)
-        if result and args.save:
+        if isinstance(result, dict) and args.save:
             with open('history.jsonl', 'a') as f:
                 json.dump(result, f)
                 f.write('\n')
+        return 0 if isinstance(result, dict) else result
     elif args.command == 'list-models-ids':
-        list_models()
+        return list_models() or 0
 
 if __name__ == '__main__':
     sys.exit(main())
