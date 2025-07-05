@@ -13,14 +13,14 @@ Gemini CLI is a command-line interface for interacting with Google's Generative 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/gemini-cli.git
+git clone https://github.com/bazoocaze/gemini-cli.git
 cd gemini-cli
 ```
 
 2. Install dependencies using pipenv:
 
 ```bash
-pipenv install --dev
+pipenv install
 ```
 
 3. Set up your environment variables by creating a `.env` file with your API key:
