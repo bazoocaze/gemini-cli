@@ -4,20 +4,20 @@ import argparse
 import requests
 import json
 
-def get_api_key_and_headers():
+def get_headers():
     api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
         print("Error: GEMINI_API_KEY environment variable is not set.")
-        return None, None
+        return None
 
     headers = {
         "X-Goog-Api-Key": api_key,
         "Content-Type": "application/json"
     }
-    return api_key, headers
+    return headers
 
 def chat(model_name, prompt, save=False):
-    _, headers = get_api_key_and_headers()
+    headers = get_headers()
     if not headers:
         return
 
@@ -42,7 +42,7 @@ def chat(model_name, prompt, save=False):
         print(f"Error: {response.status_code} - {response.text}")
 
 def list_models():
-    _, headers = get_api_key_and_headers()
+    headers = get_headers()
     if not headers:
         return
 
