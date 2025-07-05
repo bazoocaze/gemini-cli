@@ -4,17 +4,24 @@ import argparse
 import requests
 import json
 
-def chat(model_name, prompt, save=False):
+def get_api_key_and_headers():
     api_key = os.getenv('GEMINI_API_KEY')
     if not api_key:
         print("Error: GEMINI_API_KEY environment variable is not set.")
-        return
+        return None, None
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
     headers = {
         "X-Goog-Api-Key": api_key,
         "Content-Type": "application/json"
     }
+    return api_key, headers
+
+def chat(model_name, prompt, save=False):
+    _, headers = get_api_key_and_headers()
+    if not headers:
+        return
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
     data = {
         "contents": [{
             "parts": [{"text": prompt}]
@@ -35,16 +42,11 @@ def chat(model_name, prompt, save=False):
         print(f"Error: {response.status_code} - {response.text}")
 
 def list_models():
-    api_key = os.getenv('GEMINI_API_KEY')
-    if not api_key:
-        print("Error: GEMINI_API_KEY environment variable is not set.")
+    _, headers = get_api_key_and_headers()
+    if not headers:
         return
 
     url = "https://generativelanguage.googleapis.com/v1beta/models"
-    headers = {
-        "X-Goog-Api-Key": api_key,
-        "Content-Type": "application/json"
-    }
 
     response = requests.get(url, headers=headers)
 
