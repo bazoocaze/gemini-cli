@@ -54,7 +54,7 @@ def list_models():
         response_json = response.json()
         models = response_json.get('models', [])
         for model in models:
-            print(model.get('name', ''))
+            print(model.get('name', '').replace('models/', ''))
     else:
         print(f"Error: {response.status_code} - {response.text}")
 
